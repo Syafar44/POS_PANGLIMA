@@ -1,0 +1,198 @@
+import { Dummy_RGP } from "@/dummy/contants";
+import { convertIDR } from "@/utils/currency";
+import { Autocomplete, AutocompleteItem, Button, Card, CardBody, CardFooter, Input, Select, SelectItem, useDisclosure } from "@heroui/react";
+import { FiMenu, FiMinus, FiPlus, FiSearch, FiTrash } from "react-icons/fi";
+import ModalAddProduk from "./ModalAddProduk";
+import usePesananBaru from "./usePesananBaru";
+import { IProdukInCart } from "@/types/Produk";
+
+const PesananBaru = () => {
+  const {isOpen, onOpen, onClose, onOpenChange} = useDisclosure()
+  const {
+    filteredItems,
+    selectedCategory,
+    setSelectedCategory,
+    isSearching,
+    setIsSearching,
+    selectedId,
+    setSelectedID,
+    cart,
+    filteredCustomers,
+    searchPhone,
+    onInputChange,
+    refetchCart,
+
+    increaseQuantity,
+    decreaseQuantity,
+    deleteProduct,
+
+    searchedItems,
+    searchTerm,
+    setSearchTerm,
+  } = usePesananBaru();
+
+  return (
+      <section className="flex">
+          <div className="w-full justify-between">
+            <div className="flex">
+                <Select
+                  selectedKeys={[selectedCategory]}
+                  onSelectionChange={(keys) => {
+                    const selectedKey = Array.from(keys)[0];
+                    setSelectedCategory(selectedKey.toString());
+                  }}
+                  size="lg"
+                  radius="none"
+                  variant="bordered"
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                >
+                  {Dummy_RGP.map((item) => (
+                    <SelectItem key={item.category} className="py-3">
+                      {item.category}
+                    </SelectItem>
+                  ))}
+                </Select>
+                <div className="flex justify-center items-center border-b-2 border-r-2 border-t-2 border-secondary/20">
+                  <Button isIconOnly className="bg-transparent rounded-none" onPress={() => setIsSearching(!isSearching)}>
+                    <FiSearch size={24} />
+                  </Button>
+                  <Input
+                    placeholder="Cari Produk..."
+                    className={`border-none focus:ring-0 focus:border-none ${isSearching ? 'w-[500px] opacity-100' : 'w-0 opacity-0'} transition-all duration-300`}
+                    radius="none"
+                    size="md"
+                    variant="underlined"
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+            </div>
+            <section className="border-r border-secondary/20 h-[calc(100vh-130px)] p-5 overflow-y-scroll">
+              <div className="grid grid-cols-4 gap-5">
+                {(searchTerm === "" ? filteredItems : searchedItems).map((item) => (
+                  <Card key={item.code_produk} 
+                    isPressable={true}
+                    onPress={() => {
+                      onOpen()
+                      setSelectedID(item.code_produk)
+                    }}
+                    radius="sm">
+                    <CardBody className="bg-gradient-to-br from-primary/20 to-primary text-6xl font-bold flex justify-center items-center h-[150px]">
+                        GO
+                    </CardBody>
+                    <CardFooter className="flex-col h-[100px] justify-between items-start gap-2 text-start">
+                      <h3>
+                        {item.title}
+                      </h3>
+                      <p className="text-primary text-shadow-black">{convertIDR(item.price)}</p>
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+            </section>
+            <ModalAddProduk 
+              isOpen={isOpen} 
+              onClose={onClose} 
+              onOpenChange={onOpenChange} 
+              selectedId={selectedId}
+              refetchCart={refetchCart}
+            />
+          </div>
+          <div className="w-[600px]">
+            <Autocomplete
+              variant="bordered"
+              radius="none"
+              size="sm"
+              label="Pilih Pelanggan"
+              type="number"
+              value={searchPhone}
+              onInputChange={onInputChange}
+            > 
+              {filteredCustomers.map((customer) => (
+                <AutocompleteItem key={customer.phone_number} textValue={customer.phone_number} className="p-4">
+                  <p>{customer.phone_number}</p>
+                  <p>{customer.name}</p>
+                </AutocompleteItem>
+              ))}
+            </Autocomplete>
+            <section className="h-[calc(100vh-285px)] overflow-y-scroll relative">
+              {cart.map((item: IProdukInCart, index) => (
+                <div key={index} className="p-5 border-b border-secondary/20 grid gap-5">
+                  <div className="flex justify-between">
+                    <span>
+                      <h4 className="text-lg">
+                        {item.title}
+                      </h4>
+                      <p className="text-primary">
+                        {convertIDR(Number(item.price * item.quantity))}
+                      </p>
+                    </span>
+                    <Button 
+                      isIconOnly 
+                      radius="full" 
+                      className="bg-transparent" 
+                      onPress={() => {deleteProduct(item.code_produk)}}
+                    >
+                        <FiTrash size={24} className="text-danger"/>
+                    </Button>
+                  </div>
+                  <div className="flex justify-end gap-5">
+                    <span className="border-2 border-primary flex justify-center items-center px-5 text-xs rounded-full">
+                        <p>PCS</p>
+                    </span>
+                    <Button 
+                        isIconOnly 
+                        radius="full" 
+                        className="border bg-transparent border-secondary"
+                        onPress={() => {decreaseQuantity(item.code_produk)}}
+                    >
+                        <FiMinus />
+                    </Button>
+                    <span className="flex justify-center items-center text-xl">
+                        {item.quantity}
+                    </span>
+                    <Button 
+                        isIconOnly 
+                        radius="full" 
+                        className="bg-primary"
+                        onPress={() => {increaseQuantity(item.code_produk)}}
+                    >
+                        <FiPlus />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+              <div className="fixed bottom-0 z-50 border-t border-secondary/20 w-[calc(100%-780px)]">
+                <div className="flex p-5 justify-between border-b border-secondary/20 bg-white">
+                  <h2 className="text-xl font-bold">
+                    Subtotal
+                  </h2>
+                  <p className="font-semibold text-primary text-xl">
+                    {convertIDR(Number(cart.reduce((acc, item: {price: number, quantity: number}) => acc + item.price * item.quantity, 0)))}
+                  </p>
+                </div>
+                <div className="p-5 flex gap-5">
+                  <Button 
+                    className="w-full bg-primary"
+                    radius="sm"
+                    size="lg"
+                  >
+                    Bayar {convertIDR(Number(cart.reduce((acc, item: {price: number, quantity: number}) => acc + item.price * item.quantity, 0)))}
+                  </Button>
+                  <Button 
+                  isIconOnly
+                    className="border-primary"
+                    radius="sm"
+                    size="lg"
+                    variant="bordered"
+                  >
+                    <FiMenu size={24} />
+                  </Button>
+                </div>
+              </div>
+            </section>
+          </div>
+      </section>
+  );
+}
+
+export default PesananBaru
