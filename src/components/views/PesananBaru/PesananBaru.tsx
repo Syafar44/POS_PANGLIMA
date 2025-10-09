@@ -114,80 +114,104 @@ const PesananBaru = () => {
                 </AutocompleteItem>
               ))}
             </Autocomplete>
-            <section className="h-[calc(100vh-285px)] overflow-y-scroll relative">
-              {cart.map((item: IProdukInCart, index) => (
-                <div key={index} className="p-5 border-b border-secondary/20 grid gap-5">
-                  <div className="flex justify-between">
-                    <span>
-                      <h4 className="text-lg">
-                        {item.title}
-                      </h4>
-                      <p className="text-primary">
-                        {convertIDR(Number(item.price * item.quantity))}
-                      </p>
-                    </span>
-                    <Button 
-                      isIconOnly 
-                      radius="full" 
-                      className="bg-transparent" 
-                      onPress={() => {deleteProduct(item.code_produk)}}
-                    >
-                        <FiTrash size={24} className="text-danger"/>
-                    </Button>
-                  </div>
-                  <div className="flex justify-end gap-5">
-                    <span className="border-2 border-primary flex justify-center items-center px-5 text-xs rounded-full">
-                        <p>PCS</p>
-                    </span>
-                    <Button 
-                        isIconOnly 
-                        radius="full" 
-                        className="border bg-transparent border-secondary"
-                        onPress={() => {decreaseQuantity(item.code_produk)}}
-                    >
-                        <FiMinus />
-                    </Button>
-                    <span className="flex justify-center items-center text-xl">
-                        {item.quantity}
-                    </span>
-                    <Button 
-                        isIconOnly 
-                        radius="full" 
-                        className="bg-primary"
-                        onPress={() => {increaseQuantity(item.code_produk)}}
-                    >
-                        <FiPlus />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-              <div className="fixed bottom-0 z-50 border-t border-secondary/20 w-[calc(100%-780px)]">
-                <div className="flex p-5 justify-between border-b border-secondary/20 bg-white">
-                  <h2 className="text-xl font-bold">
-                    Subtotal
-                  </h2>
-                  <p className="font-semibold text-primary text-xl">
-                    {convertIDR(Number(cart.reduce((acc, item: {price: number, quantity: number}) => acc + item.price * item.quantity, 0)))}
-                  </p>
-                </div>
-                <div className="p-5 flex gap-5">
-                  <Button 
-                    className="w-full bg-primary"
-                    radius="sm"
-                    size="lg"
-                  >
-                    Bayar {convertIDR(Number(cart.reduce((acc, item: {price: number, quantity: number}) => acc + item.price * item.quantity, 0)))}
-                  </Button>
-                  <Button 
-                  isIconOnly
-                    className="border-primary"
-                    radius="sm"
-                    size="lg"
-                    variant="bordered"
-                  >
-                    <FiMenu size={24} />
-                  </Button>
-                </div>
+            <section className="flex-col justify-between">
+              <div className="h-[calc(100vh-285px)] overflow-y-scroll flex-col justify-between">
+                  {cart.map((item: IProdukInCart, index) => {
+                    return (
+                      <div key={index} className="p-5 border-b border-secondary/20 grid gap-5">
+                        <div className="flex justify-between">
+                          <span>
+                            <h4 className="text-lg">
+                              {item.title}
+                            </h4>
+                            <span className=" flex gap-3">
+                              <p className="text-primary">
+                                {convertIDR(
+                                  Number(
+                                    (item.price * item.quantity) -
+                                    (item.isPercent
+                                      ? (item.price * item.quantity * (item.isDiscount / 100))
+                                      : item.isDiscount)
+                                  )
+                                )}
+                              </p>
+                              <p>
+                                {item.isDiscount > 0
+                                  ? `( Diskon ${item.isPercent ? `${item.isDiscount}%` : convertIDR(item.isDiscount)} )`
+                                  : ""}
+                              </p>                            
+                            </span>
+                          </span>
+                          <Button 
+                            isIconOnly 
+                            radius="full" 
+                            className="bg-transparent" 
+                            onPress={() => {deleteProduct(item.code_produk)}}
+                          >
+                              <FiTrash size={24} className="text-danger"/>
+                          </Button>
+                        </div>
+                        <div className="flex justify-end gap-5">
+                          <span className="border-2 border-primary flex justify-center items-center px-5 text-xs rounded-full">
+                              <p>PCS</p>
+                          </span>
+                          <Button 
+                              isIconOnly 
+                              radius="full" 
+                              className="border bg-transparent border-secondary"
+                              onPress={() => {decreaseQuantity(item.code_produk)}}
+                          >
+                              <FiMinus />
+                          </Button>
+                          <span className="flex justify-center items-center text-xl">
+                              {item.quantity}
+                          </span>
+                          <Button 
+                              isIconOnly 
+                              radius="full" 
+                              className="bg-primary"
+                              onPress={() => {increaseQuantity(item.code_produk)}}
+                          >
+                              <FiPlus />
+                          </Button>
+                        </div>
+                      </div>
+                  )})}
+              </div>
+              <div className="w-full border-t border-secondary/20">
+                {(() => {
+                  const subtotal = cart.reduce((acc, item) => {
+                    const total = item.price * item.quantity;
+                    const discount = item.isPercent ? total * (item.isDiscount / 100) : item.isDiscount;
+                    const totalAfterDiscount = total - discount;
+                    return acc + totalAfterDiscount;
+                  }, 0);
+
+                  return (
+                    <>
+                      <div className="flex p-5 justify-between border-b border-secondary/20 bg-white">
+                        <h2 className="text-xl font-bold">Subtotal</h2>
+                        <p className="font-semibold text-primary text-xl">
+                          {convertIDR(Number(subtotal))}
+                        </p>
+                      </div>
+                      <div className="p-5 flex gap-2">
+                        <Button className="w-full bg-primary" radius="sm" size="lg">
+                          Bayar {convertIDR(Number(subtotal))}
+                        </Button>
+                        <Button
+                          isIconOnly
+                          className="border-primary"
+                          radius="sm"
+                          size="lg"
+                          variant="bordered"
+                        >
+                          <FiMenu size={24} />
+                        </Button>
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
             </section>
           </div>

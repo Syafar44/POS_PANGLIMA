@@ -174,4 +174,125 @@ const Dummy_Pelanggan = [
   },
 ];
 
-export { Dummy_RGP, Dummy_Pelanggan };
+const Dummy_Riwayat_Penjualan = [
+  {
+    id: "rgp.j1.00023",
+    createdAt: "2025-12-01T11:00:00Z",
+    method: "Takeaway",
+    customer: {
+      phone_number: "081234567890",
+      name: "Ahmad Fauzi",
+      birthday: "2000-01-01",
+    },
+    cashier: {
+      id: "b350nb92k",
+      Email: "admin@pos-panglima.com",
+      name: "Wildan",
+    },
+    invoice : {
+      total_payment: 50000,
+      return: 26000,
+      total_revenue: 24000,
+      payment_method: "Tunai"
+    },
+    commodity: [
+      { 
+        code_produk: "BRG001", 
+        title: "Gembung Original", 
+        price: 12000, 
+        quantity: 2,
+        is_percent: false,
+        discount: 2000,
+        total_price: 22000,
+        unit: "Pcs"
+      },
+      { 
+        code_produk: "BRG001", 
+        title: "Kotak Gembung isi 2", 
+        price: 0, 
+        quantity: 1,
+        discount: 0,
+        total_price: 0,
+        unit: "Lembar"
+      },
+    ],
+  },
+  {
+    id: "rgp.j1.00022",
+    createdAt: "2025-12-01T10:30:00Z",
+    method: "Takeaway",
+    customer: {},
+    cashier: {
+      id: "b350nb92k",
+      Email: "admin@pos-panglima.com",
+      name: "Wildan",
+    },
+    invoice : {
+      total_payment: 100000,
+      return: 52000,
+      total_revenue: 48000,
+      payment_method: "Qris"
+    },
+    commodity: [
+      { 
+        code_produk: "BRG001", 
+        title: "Donat Paket isi 6", 
+        price: 30000, 
+        quantity: 2,
+        is_percent: true,
+        discount: 10,
+        total_price: 48000,
+        unit: "Pcs"
+      },
+      { 
+        code_produk: "BRG001", 
+        title: "Kotak Donat isi 6", 
+        price: 0, 
+        quantity: 2,
+        discount: 0,
+        total_price: 0,
+        unit: "Lembar"
+      },
+    ],
+  },
+  {
+    id: "rgp.j1.00021",
+    createdAt: "2025-12-01T10:00:00Z",
+    method: "Delivery",
+    customer: {},
+    cashier: {
+      id: "b350nb92k",
+      Email: "admin@pos-panglima.com",
+      name: "Wildan",
+    }, 
+    invoice : {
+      total_payment: 100000,
+      return: 40000,
+      total_revenue: 60000,
+      payment_method: "Qris"
+    },
+    commodity: [
+      { 
+        code_produk: "BRG001", 
+        title: "Donat Paket isi 6", 
+        price: 30000, 
+        quantity: 2,
+        is_percent: false,
+        discount: 0,
+        total_price: 60000,
+        unit: "Pcs"
+      },
+      { 
+        code_produk: "BRG001", 
+        title: "Kotak Donat isi 6", 
+        price: 0, 
+        quantity: 2,
+        discount: 0,
+        total_price: 0,
+        unit: "Lembar"
+      },
+    ],
+  },
+]
+
+export { Dummy_RGP, Dummy_Pelanggan, Dummy_Riwayat_Penjualan };

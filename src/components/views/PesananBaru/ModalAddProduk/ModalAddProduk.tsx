@@ -128,7 +128,7 @@ const ModalAddProduk = (props: PropTypes) => {
                                     size="lg"
                                     isSelected={isPercent} onValueChange={setIsPercent}
                                     thumbIcon={({isSelected, className}) =>
-                                        isSelected ? <FiPercent className={className} /> : <p className="text-xs">Rp</p>
+                                        isSelected ? <FiPercent className={className} /> : <p className="text-xs bg-secondary rounded-full text-white p-[4px]">Rp</p>
                                     }
                                     >
                                 </Switch>
