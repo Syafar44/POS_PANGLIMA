@@ -191,9 +191,14 @@ const RiwayatPenjualan = () => {
                       <p className="text-secondary">Diinput Oleh : {detailPenjualan?.cashier.name}</p>
                     </div>
                   </div>
-                  <h3 className="font-bold text-xl text-primary">
-                    {convertIDR(Number(item.total_price))}
-                  </h3>
+                  <span className="font-bold text-xl text-primary flex gap-5">
+                    <p className="text-secondary">
+                      {item.discount > 0 ? item.is_percent ? `( Diskon ${item.discount}% )` : `( Diskon ${convertIDR(item.discount)} )` : ""}
+                    </p>
+                    <h3>
+                      {convertIDR(Number(item.total_price))} 
+                    </h3>
+                  </span>
                 </div>
               ))}
               <div className="pt-5">
@@ -207,7 +212,7 @@ const RiwayatPenjualan = () => {
             </div>
             <div className="pb-5 border-b border-secondary/20">
               <div className="flex justify-between items-center">
-                <p className="text-secondary text-xl font-semibold">Subtotal</p>
+                <p className="text-xl font-semibold">Subtotal</p>
                 <h3 className="font-bold text-xl text-primary">
                   {convertIDR(Number(detailPenjualan?.invoice?.total_revenue))}
                 </h3>
@@ -215,7 +220,7 @@ const RiwayatPenjualan = () => {
             </div>
             <div className="pb-5">
               <div className="flex justify-between items-center">
-                <p className="text-secondary text-2xl font-semibold">GRAND TOTAL</p>  
+                <p className="text-2xl font-semibold">GRAND TOTAL</p>  
                 <h3 className="font-bold text-2xl text-primary">
                   {convertIDR(Number(detailPenjualan?.invoice?.total_revenue))}
                 </h3>

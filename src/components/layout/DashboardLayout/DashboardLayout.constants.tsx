@@ -1,4 +1,4 @@
-import { FiBook, FiClipboard, FiFileText, FiSettings, FiShoppingCart, FiUser, FiUsers } from "react-icons/fi";
+import { FiBook, FiClipboard, FiFileText, FiInbox, FiSettings, FiShoppingCart, FiUser, FiUsers } from "react-icons/fi";
 
 const CONTANTS = [
     {
@@ -30,6 +30,11 @@ const CONTANTS = [
         title: "Laporan",
         icon: <FiBook size={30} />,
         href: "/laporan",
+    },
+    {
+        title: "Inventory",
+        icon: <FiInbox size={30} />,
+        href: "/inventory",
     },
     {
         title: "Pengaturan",

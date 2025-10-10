@@ -190,9 +190,9 @@ const Dummy_Riwayat_Penjualan = [
       name: "Wildan",
     },
     invoice : {
-      total_payment: 50000,
-      return: 26000,
-      total_revenue: 24000,
+      total_payment: 100000,
+      return: 24000,
+      total_revenue: 76000,
       payment_method: "Tunai"
     },
     commodity: [
@@ -215,6 +215,25 @@ const Dummy_Riwayat_Penjualan = [
         total_price: 0,
         unit: "Lembar"
       },
+      { 
+        code_produk: "BRG001", 
+        title: "Donat Paket isi 6", 
+        price: 30000, 
+        quantity: 2,
+        is_percent: true,
+        discount: 10,
+        total_price: 54000,
+        unit: "Pcs"
+      },
+      { 
+        code_produk: "BRG001", 
+        title: "Kotak Donat isi 6", 
+        price: 0, 
+        quantity: 2,
+        discount: 0,
+        total_price: 0,
+        unit: "Lembar"
+      },
     ],
   },
   {
@@ -229,8 +248,8 @@ const Dummy_Riwayat_Penjualan = [
     },
     invoice : {
       total_payment: 100000,
-      return: 52000,
-      total_revenue: 48000,
+      return: 46000,
+      total_revenue: 54000,
       payment_method: "Qris"
     },
     commodity: [
@@ -241,7 +260,7 @@ const Dummy_Riwayat_Penjualan = [
         quantity: 2,
         is_percent: true,
         discount: 10,
-        total_price: 48000,
+        total_price: 54000,
         unit: "Pcs"
       },
       { 
@@ -268,7 +287,7 @@ const Dummy_Riwayat_Penjualan = [
     invoice : {
       total_payment: 100000,
       return: 40000,
-      total_revenue: 60000,
+      total_revenue: 58000,
       payment_method: "Qris"
     },
     commodity: [
@@ -278,8 +297,8 @@ const Dummy_Riwayat_Penjualan = [
         price: 30000, 
         quantity: 2,
         is_percent: false,
-        discount: 0,
-        total_price: 60000,
+        discount: 2000,
+        total_price: 58000,
         unit: "Pcs"
       },
       { 
