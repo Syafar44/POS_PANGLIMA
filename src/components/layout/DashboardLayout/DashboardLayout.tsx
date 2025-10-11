@@ -70,7 +70,7 @@ const DashboardLayout = (props: PropTypes) => {
                                     </Link>
                                 ))}
                             </div>
-                            <div className="px-5 w-full pb-10">
+                            <div className="px-5 w-full py-5">
                                 <Button className="bg-primary w-full py-7 text-xl">
                                     Selesai Shift
                                 </Button>

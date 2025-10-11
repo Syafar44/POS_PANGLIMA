@@ -5,9 +5,12 @@ import { FiMenu, FiMinus, FiPlus, FiSearch, FiTrash } from "react-icons/fi";
 import ModalAddProduk from "./ModalAddProduk";
 import usePesananBaru from "./usePesananBaru";
 import { IProdukInCart } from "@/types/Produk";
+import ModalPayment from "./ModalPayment";
 
 const PesananBaru = () => {
-  const {isOpen, onOpen, onClose, onOpenChange} = useDisclosure()
+  const paymentModal = useDisclosure()
+  const addModal = useDisclosure()
+  
   const {
     filteredItems,
     selectedCategory,
@@ -72,7 +75,7 @@ const PesananBaru = () => {
                   <Card key={item.code_produk} 
                     isPressable={true}
                     onPress={() => {
-                      onOpen()
+                      addModal.onOpen()
                       setSelectedID(item.code_produk)
                     }}
                     radius="sm">
@@ -90,9 +93,9 @@ const PesananBaru = () => {
               </div>
             </section>
             <ModalAddProduk 
-              isOpen={isOpen} 
-              onClose={onClose} 
-              onOpenChange={onOpenChange} 
+              isOpen={addModal.isOpen} 
+              onClose={addModal.onClose} 
+              onOpenChange={addModal.onOpenChange} 
               selectedId={selectedId}
               refetchCart={refetchCart}
             />
@@ -196,7 +199,15 @@ const PesananBaru = () => {
                         </p>
                       </div>
                       <div className="p-5 flex gap-2">
-                        <Button className="w-full bg-primary" radius="sm" size="lg">
+                        <Button 
+                          className="w-full bg-primary" 
+                          radius="sm" 
+                          size="lg"
+                          isDisabled={cart.length === 0}
+                          onPress={() => {
+                            paymentModal.onOpen()
+                          }}
+                        >
                           Bayar {convertIDR(Number(subtotal))}
                         </Button>
                         <Button
@@ -209,6 +220,13 @@ const PesananBaru = () => {
                           <FiMenu size={24} />
                         </Button>
                       </div>
+                      <ModalPayment
+                        isOpen={paymentModal.isOpen} 
+                        onClose={paymentModal.onClose} 
+                        onOpenChange={paymentModal.onOpenChange} 
+                        cart={cart}
+                        subtotal={subtotal}
+                      />
                     </>
                   );
                 })()}
