@@ -1,3 +1,3 @@
-import PenginputanBarang from "./PenginputanBarang";
+import ReturnPenjualan from "./ReturnPenjualan";
 
-export default PenginputanBarang;
+export default ReturnPenjualan;
