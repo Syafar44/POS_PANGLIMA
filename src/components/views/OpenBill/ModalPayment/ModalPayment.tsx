@@ -8,14 +8,14 @@ interface PropTypes {
     isOpen: boolean;
     onClose: () => void;
     onOpenChange: () => void;
-    cart: IProdukInCart[];
-    subtotal: number;
+    cart?: IProdukInCart[];
+    subtotal?: number;
 }
 
 const roundToNearestThousand = (num: number) => Math.ceil(num / 10000) * 10000;
 
 const ModalPayment = (props: PropTypes) => {
-    const { isOpen, onClose, onOpenChange, cart, subtotal } = props;
+    const { isOpen, onClose, onOpenChange, cart, subtotal = 0 } = props;
     const [selected, setSelected] = useState<"exact" | "rounded" | "custom">("exact");
     const [selectedPayment, setSelectedPayment] = useState("");
     const [customAmount, setCustomAmount] = useState<number | "">("");
@@ -119,7 +119,7 @@ const ModalPayment = (props: PropTypes) => {
                     <div className="flex h-[calc(100vh-85px)]">
                         <div className="w-[600px] border-r border-secondary/40  overflow-y-scroll flex flex-col justify-between">
                             <div className="flex flex-col gap-4">
-                                {cart.map((item: IProdukInCart, index) => {
+                                {/* {cart.map((item: IProdukInCart, index) => {
                                     return (
                                     <div key={index} className="p-5 border-b border-secondary/20 grid gap-5">
                                         <div className="flex justify-between">
@@ -153,10 +153,10 @@ const ModalPayment = (props: PropTypes) => {
                                             </p>
                                         </div>
                                     </div>
-                                )})}
+                                )})} */}
                             </div>
                             <div className="w-full border-t border-secondary/20">
-                                {(() => {
+                                {/* {(() => {
                                     const subtotal = cart.reduce((acc, item) => {
                                     const total = item.price * item.quantity;
                                     const discount = item.isPercent ? total * (item.isDiscount / 100) : item.isDiscount;
@@ -174,7 +174,7 @@ const ModalPayment = (props: PropTypes) => {
                                         </div>
                                     </>
                                     );
-                                })()}
+                                })()} */}
                             </div>
                         </div>
                         <div className="w-full">
