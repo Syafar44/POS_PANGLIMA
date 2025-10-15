@@ -6,10 +6,12 @@ import ModalAddProduk from "./ModalAddProduk";
 import usePesananBaru from "./usePesananBaru";
 import { IProdukInCart } from "@/types/Produk";
 import ModalPayment from "./ModalPayment";
+import ModalUpdateProduk from "./ModalUpdateProduk";
 
 const PesananBaru = () => {
   const paymentModal = useDisclosure()
   const addModal = useDisclosure()
+  const updateModal = useDisclosure()
   
   const {
     filteredItems,
@@ -121,7 +123,11 @@ const PesananBaru = () => {
               <div className="h-[calc(100vh-285px)] overflow-y-scroll flex-col justify-between">
                   {cart.map((item: IProdukInCart, index) => {
                     return (
-                      <div key={index} className="p-5 border-b border-secondary/20 grid gap-5">
+                      <div onClick={() => {
+                        setSelectedID(item.cartItemId)
+                        console.log("cartid", selectedId)
+                        updateModal.onOpen()
+                      }} key={index} className="p-5 border-b border-secondary/20 grid gap-5">
                         <div className="flex justify-between">
                           <span>
                             <h4 className="text-lg">
@@ -162,7 +168,9 @@ const PesananBaru = () => {
                               isIconOnly 
                               radius="full" 
                               className="border bg-transparent border-secondary"
-                              onPress={() => {decreaseQuantity(item.code_produk)}}
+                              onPress={() => {
+                                item.quantity === 1 ? deleteProduct(item.code_produk) : decreaseQuantity(item.code_produk)
+                              }}
                           >
                               <FiMinus />
                           </Button>
@@ -180,6 +188,12 @@ const PesananBaru = () => {
                         </div>
                       </div>
                   )})}
+                  <ModalUpdateProduk 
+                    isOpen={updateModal.isOpen} 
+                    onClose={updateModal.onClose} 
+                    onOpenChange={updateModal.onOpenChange} 
+                    selectedId={selectedId}
+                  />
               </div>
               <div className="w-full border-t border-secondary/20">
                 {(() => {

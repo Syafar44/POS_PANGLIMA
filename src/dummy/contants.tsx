@@ -51,7 +51,21 @@ const Dummy_RGP = [
   {
     category: "Donat",
     data: [
-      { code_produk: "BRG025", title: "Paket 1 Box (Isi 6)", price: 30000 },
+      { code_produk: "BRG025", title: "Paket 1 Box (Isi 6)", price: 30000, maxProduk: 6,
+        props: [
+          { code_produk: "BRG026", title: "Donat Original" },
+          { code_produk: "BRG027", title: "Donat Coklat" },
+          { code_produk: "BRG028", title: "Donat Coklat Kacang" },
+          { code_produk: "BRG029", title: "Donat Meses Coklat" },
+          { code_produk: "BRG030", title: "Donat Oreo" },
+          { code_produk: "BRG031", title: "Donat Strawberry" },
+          { code_produk: "BRG032", title: "Donat Tiramisu Almond" },
+          { code_produk: "BRG033", title: "Donat Abon" },
+          { code_produk: "BRG034", title: "Donat Cappucino Chocochip" },
+          { code_produk: "BRG035", title: "Donat Keju" },
+          { code_produk: "BRG036", title: "Donat Taro" },
+        ]
+      },
       { code_produk: "BRG026", title: "Donat Original", price: 5000 },
       { code_produk: "BRG027", title: "Donat Coklat", price: 6000 },
       { code_produk: "BRG028", title: "Donat Coklat Kacang", price: 6000 },
@@ -83,27 +97,45 @@ const Dummy_RGP = [
     ],
   },
   {
-    category: "Pia Kering",
+    category: "Bakpia Kering",
     data: [
-      { code_produk: "BRG044", title: "Paket 1 Box (Isi 10)", price: 27000 },
-      { code_produk: "BRG045", title: "Pia Kacang", price: 3000 },
-      { code_produk: "BRG046", title: "Pia Coklat", price: 3000 },
-      { code_produk: "BRG047", title: "Pia Keju", price: 3000 },
+      { code_produk: "BRG044", title: "Paket 1 Box (Isi 10)", price: 27000, maxProduk: 10,
+        props: [
+          { code_produk: "BRG045", title: "Pia Kering Kacang"},
+          { code_produk: "BRG046", title: "Pia Kering Coklat"},
+          { code_produk: "BRG047", title: "Pia Kering Keju"},
+        ]
+      },
+      { code_produk: "BRG045", title: "Pia Kering Kacang", price: 3000 },
+      { code_produk: "BRG046", title: "Pia Kering Coklat", price: 3000 },
+      { code_produk: "BRG047", title: "Pia Kering Keju", price: 3000 },
     ],
   },
   {
-    category: "Pia Basah",
+    category: "Bakpia Basah",
     data: [
-      { code_produk: "BRG048", title: "Paket 1 Box (Isi 12)", price: 33000 },
-      { code_produk: "BRG049", title: "Pia Kacang", price: 3000 },
-      { code_produk: "BRG050", title: "Pia Coklat", price: 3000 },
-      { code_produk: "BRG051", title: "Pia Keju", price: 3000 },
+      { code_produk: "BRG044", title: "Paket 1 Box (Isi 10)", price: 27000, maxProduk: 10,
+        props: [
+          { code_produk: "BRG049", title: "Pia Basah Kacang"},
+          { code_produk: "BRG050", title: "Pia Basah Coklat"},
+          { code_produk: "BRG051", title: "Pia Basah Keju"},
+        ]
+      },
+      { code_produk: "BRG049", title: "Pia Basah Kacang", price: 3000 },
+      { code_produk: "BRG050", title: "Pia Basah Coklat", price: 3000 },
+      { code_produk: "BRG051", title: "Pia Basah Keju", price: 3000 },
     ],
   },
   {
     category: "Pisang Bolen",
     data: [
-      { code_produk: "BRG052", title: "Paket 1 Box (Isi 6)", price: 45000 },
+      { code_produk: "BRG052", title: "Paket 1 Box (Isi 6)", price: 45000, maxProduk: 6,
+        props: [
+          { code_produk: "BRG053", title: "Bolen Coklat",},
+          { code_produk: "BRG054", title: "Bolen Keju",},
+          { code_produk: "BRG055", title: "Bolen Mix",}
+        ]
+      },
       { code_produk: "BRG053", title: "Bolen Coklat", price: 8000 },
       { code_produk: "BRG054", title: "Bolen Keju", price: 8000 },
       { code_produk: "BRG055", title: "Bolen Mix", price: 8000 },
@@ -198,7 +230,7 @@ const Dummy_Riwayat_Penjualan = [
     commodity: [
       { 
         code_produk: "BRG001", 
-        title: "Gembung Original", 
+        title: "Gembung Original",
         price: 12000, 
         quantity: 2,
         is_percent: false,

@@ -1,19 +1,19 @@
 import { convertIDR } from "@/utils/currency";
 import { Button, Input, Modal, ModalBody, ModalContent, ModalHeader, Switch } from "@heroui/react";
 import { FiMinus, FiPercent, FiPlus } from "react-icons/fi";
-import useModalAddProduk from "./useModalAddProduk";
-import { IProduk } from "@/types/Produk";
+import useModalUpdateProduk from "./useModalUpdateProduk";
+import { IProduk, IProdukInCart } from "@/types/Produk";
+import { useEffect } from "react";
 
 interface PropTypes {
     isOpen: boolean;
     onClose: () => void;
     onOpenChange: () => void;
     selectedId: string;
-    refetchCart: () => void;
 }
 
-const ModalAddProduk = (props: PropTypes) => {
-    const { isOpen, onClose, onOpenChange, selectedId, refetchCart } = props;
+const ModalUpdateProduk = (props: PropTypes) => {
+    const { isOpen, onClose, onOpenChange, selectedId} = props;
     const {
         quantity,
         setQuantity,
@@ -26,14 +26,30 @@ const ModalAddProduk = (props: PropTypes) => {
         toggleProp,
         selectedProps,
         getTotalSelectedProps,
-        findProductByCode,
-        handleAddCart,
+        findProductById,
+        handleUpdateCart,
         setSelectedProps,
-    } = useModalAddProduk();
+        refetchCartFromStorage,
+    } = useModalUpdateProduk();
 
-    const produk = findProductByCode(selectedId);
+    
+    const produk = findProductById(selectedId);
     const totalProps = getTotalSelectedProps();
-    const maxProduk = (produk as IProduk)?.maxProduk;
+    const maxProduk = (produk as IProdukInCart)?.maxProduk;
+
+    useEffect(() => {
+        if (isOpen) {
+            refetchCartFromStorage()
+            const produk = findProductById(selectedId);
+            if (produk) {
+                setQuantity(produk.quantity || 1);
+                setIsPercent(produk.isPercent || false);
+                setIsDiscount(produk.isDiscount || 0);
+                setIsMessage(produk.isMessage || "");
+                setSelectedProps(produk.props ?? []);
+            }
+        }
+    }, [isOpen, selectedId, produk]);
 
     return (
         <Modal
@@ -74,12 +90,12 @@ const ModalAddProduk = (props: PropTypes) => {
                         </div>
                     </div>
                     <Button 
-                        className="ml-5 bg-primary text-white font-bold" 
+                        className="ml-5 bg-primary text-white font-bold"
                         size="lg" 
                         radius="sm"
-                        onPress={() => handleAddCart(produk as IProduk, onClose, refetchCart)}
+                        onPress={() => handleUpdateCart(`${produk?.cartItemId}`, onClose)}
                     >
-                        Simpan  
+                        Simpan
                     </Button>
                 </ModalHeader>
                 <ModalBody>
@@ -126,14 +142,17 @@ const ModalAddProduk = (props: PropTypes) => {
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 {produk.props.map((prop: IProduk) => {
+                                    console.log("prop", prop)
+                                    console.log("selectedProps", selectedProps)
                                     const selected = selectedProps.find((p) => p.code_produk === prop.code_produk);
+                                    const isNoQuantity = selected?.quantity === 0;
                                     return (
                                         <Button
                                             key={prop.code_produk}
                                             size="sm"
                                             radius="full"
                                             className={`border ${
-                                                selected ? "bg-primary text-white" : "bg-transparent border-primary"
+                                                !isNoQuantity ? "bg-primary text-white" : "bg-transparent border-primary"
                                             }`}
                                             onPress={() => toggleProp(prop, maxProduk)}
                                             isDisabled={
@@ -143,7 +162,7 @@ const ModalAddProduk = (props: PropTypes) => {
                                             }
                                         >
                                             {prop.title}
-                                            {selected && selected.quantity > 0 && (
+                                            {selected && (selected.quantity ?? 0) > 0 && (
                                                 <span className="ml-2 text-xs font-bold">
                                                     {selected.quantity}
                                                 </span>
@@ -202,4 +221,4 @@ const ModalAddProduk = (props: PropTypes) => {
     )
 }
 
-export default ModalAddProduk;
+export default ModalUpdateProduk;
