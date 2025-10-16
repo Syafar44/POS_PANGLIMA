@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 const useModalUpdateProduk = () => {
     const [quantity, setQuantity] = useState(1);
     const [isPercent, setIsPercent] = useState(false);
-    const [isDiscount, setIsDiscount] = useState<number | "">("");
+    const [isDiscount, setIsDiscount] = useState<number>(0);
     const [isMessage, setIsMessage] = useState("");
 
     const [selectedProps, setSelectedProps] = useState<IProdukProp[]>([]);
@@ -73,8 +73,6 @@ const useModalUpdateProduk = () => {
                 quantity: match ? match.quantity : 0,
             };
         });
-
-        console.log("mergedProps", mergedProps)
         
         return {
             ...foundInDummy,
@@ -108,6 +106,7 @@ const useModalUpdateProduk = () => {
     const handleUpdateCart = (
         cartItemId: string,
         onClose: () => void,
+        refetchCart: () => void,
     ) => {
         const index = cart.findIndex((item: IProdukInCart) => item.cartItemId === cartItemId);
 
@@ -131,6 +130,10 @@ const useModalUpdateProduk = () => {
         newCart[index] = updatedItem;
 
         setCart(newCart);
+        localStorage.setItem("cart", JSON.stringify(newCart));
+        
+        refetchCart();
+
         onClose();
         setIsDiscount(0);
         setIsMessage("");

@@ -123,6 +123,14 @@ const ModalAddProduk = (props: PropTypes) => {
                                 <p className="">
                                     Pilih Varian ( {totalProps} / {maxProduk || 0} )
                                 </p>
+                                <Button 
+                                    className="h-full bg-transparent text-red-500" 
+                                    radius="sm"
+                                    onPress={() => setSelectedProps([])}
+                                    isDisabled={totalProps === 0}
+                                >
+                                    Reset
+                                </Button>
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 {produk.props.map((prop: IProduk) => {

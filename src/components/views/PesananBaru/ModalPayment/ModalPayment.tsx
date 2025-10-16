@@ -3,6 +3,7 @@ import { convertIDR } from "@/utils/currency";
 import { Button, Chip, Input, Modal, ModalBody, ModalContent, ModalHeader, Tab, Tabs, tv, useCheckbox, VisuallyHidden} from "@heroui/react";
 import { useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
+import { PAYMENT_NON_CASH } from "./ModalPayment.constant";
 
 interface PropTypes {
     isOpen: boolean;
@@ -10,14 +11,16 @@ interface PropTypes {
     onOpenChange: () => void;
     cart: IProdukInCart[];
     subtotal: number;
+    pelanggan?: string;
 }
 
 const roundToNearestThousand = (num: number) => Math.ceil(num / 10000) * 10000;
 
 const ModalPayment = (props: PropTypes) => {
-    const { isOpen, onClose, onOpenChange, cart, subtotal } = props;
+    const { isOpen, onClose, onOpenChange, cart, subtotal, pelanggan ="pelanggan umum" } = props;
     const [selected, setSelected] = useState<"exact" | "rounded" | "custom">("exact");
     const [selectedPayment, setSelectedPayment] = useState("");
+    const [selectedMethod, setSelectedMethod] =useState<"takeaway" | "delivery">("takeaway");
     const [customAmount, setCustomAmount] = useState<number | "">("");
 
     const exactAmount = subtotal;
@@ -121,29 +124,44 @@ const ModalPayment = (props: PropTypes) => {
                             <div className="flex flex-col gap-4">
                                 {cart.map((item: IProdukInCart, index) => {
                                     return (
-                                    <div key={index} className="p-5 border-b border-secondary/20 grid gap-5">
+                                    <div key={index} className="px-5 py-2 border-b border-secondary/20 grid gap-5">
                                         <div className="flex justify-between">
                                         <span>
                                             <h4 className="text-lg">
-                                            {item.title}
+                                                {item.title}
                                             </h4>
                                             <span className=" flex gap-3">
-                                            <p className="text-primary">
-                                                {convertIDR(
-                                                Number(
-                                                    (item.price * item.quantity) -
-                                                    (item.isPercent
-                                                    ? (item.price * item.quantity * (item.isDiscount / 100))
-                                                    : item.isDiscount)
-                                                )
-                                                )}
-                                            </p>
-                                            <p>
-                                                {item.isDiscount > 0
-                                                ? `( Diskon ${item.isPercent ? `${item.isDiscount}%` : convertIDR(item.isDiscount)} )`
-                                                : ""}
-                                            </p>                            
+                                                <p className="text-primary font-semibold tracking-wider">
+                                                    {convertIDR(
+                                                    Number(
+                                                        (item.price * item.quantity) -
+                                                        (item.isPercent
+                                                        ? (item.price * item.quantity * (item.isDiscount / 100))
+                                                        : item.isDiscount)
+                                                    )
+                                                    )}
+                                                </p>
+                                                <p>
+                                                    {item.isDiscount > 0
+                                                    ? `( Diskon ${item.isPercent ? `${item.isDiscount}%` : convertIDR(item.isDiscount)} )`
+                                                    : ""}
+                                                </p>                            
                                             </span>
+                                            {item.props !== undefined && (  
+                                                <span>
+                                                    <p className="text-sm">{item.title}</p>
+                                                    <ul className="text-sm pl-1">
+                                                        {item.props?.map(prop => {
+                                                            const {quantity, title} = prop
+                                                            const text = quantity === 0 ? "" : `${quantity}x ${title}`
+                                                            return (
+                                                            <li key={prop.code_produk}>
+                                                                {text}
+                                                            </li>
+                                                        )})}
+                                                    </ul>
+                                                </span>
+                                            )}
                                         </span>
                                             
                                         </div>
@@ -180,15 +198,15 @@ const ModalPayment = (props: PropTypes) => {
                         <div className="w-full">
                             <div className="flex flex-col justify-center items-center gap-1 p-5 border-b border-secondary/20">
                                 <p className="font-semibold text-secondary">Total Penerimaan</p>
-                                <h1 className="text-4xl font-bold text-primary">{convertIDR(Number(subtotal))}</h1>
+                                <h1 className="text-4xl font-bold text-primary tracking-wide">{convertIDR(Number(subtotal))}</h1>
                             </div>
                             <div className="p-5 flex flex-col justify-center items-center">
                                 <Tabs aria-label="Options" size="lg" className="w-full">
                                     <Tab key="tunai" title="Tunai" className="w-full">
                                         <div className="flex flex-col justify-between h-[calc(100vh-280px)]">
                                             <div>
-                                                <p className="font-semibold">Nominal Penerimaan</p>
-                                                <div className="mt-5 grid gap-5">
+                                                <p className="font-semibold text-xl">Nominal Penerimaan</p>
+                                                <div className="mt-5 grid gap-5 tracking-wide">
                                                     <div className="flex gap-5">
                                                         <CustomCheckbox
                                                             label={convertIDR(exactAmount)}
@@ -207,7 +225,21 @@ const ModalPayment = (props: PropTypes) => {
                                                             isSelected={selected === "custom"}
                                                             onSelect={() => setSelected("custom")}
                                                         />
-                                                        
+                                                    </div>
+                                                    <p className="font-semibold text-xl">Metode</p>
+                                                    <div>
+                                                        <div className="flex flex-wrap gap-3 tracking-wide">
+                                                            <CustomCheckbox
+                                                                label="Takeaway"
+                                                                isSelected={selectedMethod === "takeaway"}
+                                                                onSelect={() => setSelectedMethod("takeaway")}
+                                                            />
+                                                            <CustomCheckbox
+                                                                label="Delivery"
+                                                                isSelected={selectedMethod === "delivery"}
+                                                                onSelect={() => setSelectedMethod("delivery")}
+                                                            />
+                                                        </div>
                                                     </div>
                                                     <div className="mt-5">
                                                         {selected === "custom" && (
@@ -237,36 +269,32 @@ const ModalPayment = (props: PropTypes) => {
                                     </Tab>
                                     <Tab key="non-tunai" title="Non Tunai" className="w-full">
                                         <div className="flex flex-col justify-between h-[calc(100vh-280px)]">
-                                            <div>
-                                                <p className="font-semibold">Nominal Penerimaan</p>
-                                                <div className="mt-5 grid gap-5 grid-cols-5">
-                                                    <div className="flex gap-3">
+                                            <div className="grid gap-4">
+                                                <p className="font-semibold text-xl">Metode Penerimaan</p>
+                                                <div className="flex flex-wrap gap-3 tracking-wide">
+                                                    {PAYMENT_NON_CASH.map(item => (
                                                         <CustomCheckbox
-                                                            label="BRI"
-                                                            isSelected={selectedPayment === "bri"}
-                                                            onSelect={() => setSelectedPayment("bri")}
+                                                            key={item.key}
+                                                            label={item.label}
+                                                            isSelected={selectedPayment === item.key}
+                                                            onSelect={() => setSelectedPayment(item.key)}
                                                         />
-                                                        
+                                                    ))}
+                                                    
+                                                </div>
+                                                <p className="font-semibold text-xl">Metode</p>
+                                                <div>
+                                                    <div className="flex flex-wrap gap-3 tracking-wide">
                                                         <CustomCheckbox
-                                                            label="BCA"
-                                                            isSelected={selectedPayment === "bca"}
-                                                            onSelect={() => setSelectedPayment("bca")}
+                                                            label="Takeaway"
+                                                            isSelected={selectedMethod === "takeaway"}
+                                                            onSelect={() => setSelectedMethod("takeaway")}
                                                         />
-
                                                         <CustomCheckbox
-                                                            label="BSI"
-                                                            isSelected={selectedPayment === "bsi"}
-                                                            onSelect={() => setSelectedPayment("bsi")}
+                                                            label="Delivery"
+                                                            isSelected={selectedMethod === "delivery"}
+                                                            onSelect={() => setSelectedMethod("delivery")}
                                                         />
-
-                                                        <CustomCheckbox
-                                                            label="BPD"
-                                                            isSelected={selectedPayment === "bpd"}
-                                                            onSelect={() => setSelectedPayment("bpd")}
-                                                        />
-
-
-                                                        
                                                     </div>
                                                 </div>
                                             </div>

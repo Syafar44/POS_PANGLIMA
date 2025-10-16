@@ -36,6 +36,8 @@ const PesananBaru = () => {
     setSearchTerm,
   } = usePesananBaru();
 
+  console.log("cart", cart)
+
   return (
       <section className="flex">
           <div className="w-full justify-between">
@@ -88,7 +90,7 @@ const PesananBaru = () => {
                       <h3>
                         {item.title}
                       </h3>
-                      <p className="text-primary text-shadow-black">{convertIDR(item.price)}</p>
+                      <p className="text-primary text-shadow-black font-medium tracking-wider">{convertIDR(item.price)}</p>
                     </CardFooter>
                   </Card>
                 ))}
@@ -125,7 +127,6 @@ const PesananBaru = () => {
                     return (
                       <div onClick={() => {
                         setSelectedID(item.cartItemId)
-                        console.log("cartid", selectedId)
                         updateModal.onOpen()
                       }} key={index} className="p-5 border-b border-secondary/20 grid gap-5">
                         <div className="flex justify-between">
@@ -134,7 +135,7 @@ const PesananBaru = () => {
                               {item.title}
                             </h4>
                             <span className=" flex gap-3">
-                              <p className="text-primary">
+                              <p className="text-primary tracking-wider font-medium">
                                 {convertIDR(
                                   Number(
                                     (item.price * item.quantity) -
@@ -150,6 +151,21 @@ const PesananBaru = () => {
                                   : ""}
                               </p>                            
                             </span>
+                            {item.props !== undefined && (  
+                              <span>
+                                <p className="text-sm">{item.title}</p>
+                                <ul className="text-sm pl-1">
+                                  {item.props?.map(prop => {
+                                    const {quantity, title} = prop
+                                    const text = quantity === 0 ? "" : `${quantity}x ${title}`
+                                    return (
+                                    <li key={prop.code_produk}>
+                                      {text}
+                                    </li>
+                                  )})}
+                                </ul>
+                              </span>
+                            )}
                           </span>
                           <Button 
                             isIconOnly 
@@ -193,6 +209,7 @@ const PesananBaru = () => {
                     onClose={updateModal.onClose} 
                     onOpenChange={updateModal.onOpenChange} 
                     selectedId={selectedId}
+                    refetchCart={refetchCart}
                   />
               </div>
               <div className="w-full border-t border-secondary/20">
@@ -208,13 +225,13 @@ const PesananBaru = () => {
                     <>
                       <div className="flex p-5 justify-between border-b border-secondary/20 bg-white">
                         <h2 className="text-xl font-bold">Subtotal</h2>
-                        <p className="font-semibold text-primary text-xl">
+                        <p className="font-bold text-primary text-xl">
                           {convertIDR(Number(subtotal))}
                         </p>
                       </div>
                       <div className="p-5 flex gap-2">
                         <Button 
-                          className="w-full bg-primary" 
+                          className="w-full bg-primary font-medium" 
                           radius="sm" 
                           size="lg"
                           isDisabled={cart.length === 0}
@@ -222,7 +239,7 @@ const PesananBaru = () => {
                             paymentModal.onOpen()
                           }}
                         >
-                          Bayar {convertIDR(Number(subtotal))}
+                          Bayar
                         </Button>
                         <Button
                           isIconOnly
@@ -240,6 +257,7 @@ const PesananBaru = () => {
                         onOpenChange={paymentModal.onOpenChange} 
                         cart={cart}
                         subtotal={subtotal}
+                        pelanggan={searchPhone}
                       />
                     </>
                   );

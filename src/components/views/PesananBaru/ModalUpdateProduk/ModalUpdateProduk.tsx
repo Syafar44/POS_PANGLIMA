@@ -3,17 +3,18 @@ import { Button, Input, Modal, ModalBody, ModalContent, ModalHeader, Switch } fr
 import { FiMinus, FiPercent, FiPlus } from "react-icons/fi";
 import useModalUpdateProduk from "./useModalUpdateProduk";
 import { IProduk, IProdukInCart } from "@/types/Produk";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface PropTypes {
     isOpen: boolean;
     onClose: () => void;
     onOpenChange: () => void;
     selectedId: string;
+    refetchCart: () => void;
 }
 
 const ModalUpdateProduk = (props: PropTypes) => {
-    const { isOpen, onClose, onOpenChange, selectedId} = props;
+    const { isOpen, onClose, onOpenChange, selectedId, refetchCart} = props;
     const {
         quantity,
         setQuantity,
@@ -24,32 +25,44 @@ const ModalUpdateProduk = (props: PropTypes) => {
         isMessage,
         setIsMessage,
         toggleProp,
-        selectedProps,
         getTotalSelectedProps,
         findProductById,
         handleUpdateCart,
+        selectedProps,
         setSelectedProps,
         refetchCartFromStorage,
     } = useModalUpdateProduk();
 
+    const [hasInitialized, setHasInitialized] = useState(false);
     
     const produk = findProductById(selectedId);
     const totalProps = getTotalSelectedProps();
     const maxProduk = (produk as IProdukInCart)?.maxProduk;
-
+    
     useEffect(() => {
         if (isOpen) {
-            refetchCartFromStorage()
-            const produk = findProductById(selectedId);
-            if (produk) {
-                setQuantity(produk.quantity || 1);
-                setIsPercent(produk.isPercent || false);
-                setIsDiscount(produk.isDiscount || 0);
-                setIsMessage(produk.isMessage || "");
-                setSelectedProps(produk.props ?? []);
-            }
+            refetchCartFromStorage();
         }
-    }, [isOpen, selectedId, produk]);
+    }, [isOpen]);
+
+    useEffect(() => {
+        if (isOpen && produk && !hasInitialized) {
+            refetchCartFromStorage();
+            setQuantity(produk.quantity);
+            setIsPercent(produk.isPercent);
+            setIsDiscount(produk.isDiscount);
+            setIsMessage(produk.isMessage);
+            setSelectedProps(produk.props ?? []);
+            setHasInitialized(true);
+        }
+    }, [isOpen, produk, hasInitialized]);
+
+
+    useEffect(() => {
+        if (!isOpen) {
+            setHasInitialized(false);
+        }
+    }, [isOpen]);
 
     return (
         <Modal
@@ -93,7 +106,7 @@ const ModalUpdateProduk = (props: PropTypes) => {
                         className="ml-5 bg-primary text-white font-bold"
                         size="lg" 
                         radius="sm"
-                        onPress={() => handleUpdateCart(`${produk?.cartItemId}`, onClose)}
+                        onPress={() => handleUpdateCart(`${produk?.cartItemId}`, onClose, refetchCart)}
                     >
                         Simpan
                     </Button>
@@ -139,13 +152,19 @@ const ModalUpdateProduk = (props: PropTypes) => {
                                 <p className="">
                                     Pilih Varian ( {totalProps} / {maxProduk || 0} )
                                 </p>
+                                <Button 
+                                    className="h-full bg-transparent text-red-500" 
+                                    radius="sm"
+                                    onPress={() => setSelectedProps([])}
+                                    isDisabled={totalProps === 0}
+                                >
+                                    Reset
+                                </Button>
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 {produk.props.map((prop: IProduk) => {
-                                    console.log("prop", prop)
-                                    console.log("selectedProps", selectedProps)
                                     const selected = selectedProps.find((p) => p.code_produk === prop.code_produk);
-                                    const isNoQuantity = selected?.quantity === 0;
+                                    const isNoQuantity = selected?.quantity === undefined ? true : selected?.quantity === 0;
                                     return (
                                         <Button
                                             key={prop.code_produk}

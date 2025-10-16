@@ -11,6 +11,9 @@ const Inventory = () => {
           <Tab key="Op name" title="Stock Opname">
             
           </Tab>
+          <Tab key="return" title="Return">
+            
+          </Tab>
         </Tabs>
       </section>
   );

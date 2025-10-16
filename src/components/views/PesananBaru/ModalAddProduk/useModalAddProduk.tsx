@@ -64,19 +64,20 @@ const useModalAddProduk = () => {
             cart[foundIndex].quantity += quantity;
         } else {
             cart.push({
-            cartItemId: uuidv4(),
-            code_produk: produk.code_produk,
-            title: produk.title,
-            quantity,
-            isPercent,
-            isDiscount: Number(isDiscount),
-            isMessage: isMessage || "",
-            price: produk.price,
-            props: normalizedProps.length > 0 ? normalizedProps : undefined,
+                cartItemId: uuidv4(),
+                code_produk: produk.code_produk,
+                title: produk.title,
+                quantity,
+                isPercent,
+                isDiscount: Number(isDiscount),
+                isMessage: isMessage || "",
+                price: produk.price,
+                props: normalizedProps.length > 0 ? normalizedProps : undefined,
             });
         }
 
         localStorage.setItem("cart", JSON.stringify(cart));
+
         onClose();
 
         setIsDiscount(0);

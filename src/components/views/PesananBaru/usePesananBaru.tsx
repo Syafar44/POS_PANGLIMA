@@ -1,6 +1,6 @@
 import { Dummy_Pelanggan, Dummy_RGP } from "@/dummy/contants";
 import { IProdukInCart } from "@/types/Produk";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 const usePesananBaru = () => {
     const [selectedCategory, setSelectedCategory] = useState(Dummy_RGP[0].category);
@@ -36,16 +36,44 @@ const usePesananBaru = () => {
 
     const [cart, setCart] = useState<IProdukInCart[]>([]);
 
-    const refetchCart = () => {
-        if (typeof window !== "undefined") {
+    const refetchCart = useCallback(() => {
+        if (typeof window === "undefined") return;
+
+        try {
             const savedCart = JSON.parse(localStorage.getItem("cart") || "[]");
-            setCart(savedCart);
+
+            setCart((prevCart) => {
+                // stringify untuk membandingkan isi, bukan hanya referensi
+                const prevString = JSON.stringify(prevCart);
+                const newString = JSON.stringify(savedCart);
+
+                if (prevString !== newString) {
+                    console.log("🔄 Cart berubah, update state:", savedCart);
+                    return [...savedCart]; // buat referensi baru
+                } else {
+                    console.log("⚠️ Cart belum berubah, tidak re-render");
+                    return prevCart; // skip update
+                }
+            });
+        } catch (err) {
+            console.error("❌ Gagal parse cart dari localStorage:", err);
         }
-    };
+    }, []);
 
     useEffect(() => {
         refetchCart();
-    }, []);
+
+        // --- listener opsional: sync antar tab ---
+        const handleStorageChange = (event: StorageEvent) => {
+            if (event.key === "cart") {
+                console.log("📦 Detected localStorage cart update");
+                refetchCart();
+            }
+        };
+
+        window.addEventListener("storage", handleStorageChange);
+        return () => window.removeEventListener("storage", handleStorageChange);
+    }, [refetchCart]);
 
     const increaseQuantity = (code_produk: string) => {
         const updatedCart = cart.map((item) =>
