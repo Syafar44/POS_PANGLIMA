@@ -6,7 +6,7 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #222831;
 }
 
 @theme inline {
@@ -18,18 +18,19 @@
   --color-primary: #F8BD1B;       
   --color-secondary: #545454;
   --color-accent: #575757;  
+  --color-primary-black: #222831;  
   /* di set nanti */
   --color-success: #32D700;       
   --color-danger: #ef233c;        
   --color-muted: #8d99ae;   
 }
 
-/* @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-} */
+}
 
 body {
   background: var(--background);
