@@ -11,6 +11,9 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "typeRoots": [
+            "./node_modules/@types",
+            "./src/types"],
     "jsx": "preserve",
     "incremental": true,
     "paths": {

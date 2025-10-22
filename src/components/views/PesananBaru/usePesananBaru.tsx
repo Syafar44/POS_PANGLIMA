@@ -75,18 +75,18 @@ const usePesananBaru = () => {
         return () => window.removeEventListener("storage", handleStorageChange);
     }, [refetchCart]);
 
-    const increaseQuantity = (code_produk: string) => {
+    const increaseQuantity = (cartItemId: string) => {
         const updatedCart = cart.map((item) =>
-            item.code_produk === code_produk ? { ...item, quantity: item.quantity + 1 } : item
+            item.cartItemId === cartItemId ? { ...item, quantity: item.quantity + 1 } : item
         );
         localStorage.setItem("cart", JSON.stringify(updatedCart));
         setCart(updatedCart);
     };
 
-    const decreaseQuantity = (code_produk: string) => {
+    const decreaseQuantity = (cartItemId: string) => {
         const updatedCart = cart
         .map((item) =>
-            item.code_produk === code_produk
+            item.cartItemId === cartItemId
             ? { ...item, quantity: Math.max(item.quantity - 1, 1) }
             : item
         )
@@ -95,8 +95,8 @@ const usePesananBaru = () => {
         setCart(updatedCart);
     };
 
-    const deleteProduct = (code_produk: string) => {
-        const updatedCart = cart.filter((item) => item.code_produk !== code_produk);
+    const deleteProduct = (cartItemId: string) => {
+        const updatedCart = cart.filter((item) => item.cartItemId !== cartItemId);
         localStorage.setItem("cart", JSON.stringify(updatedCart));
         setCart(updatedCart);
     };

@@ -38,7 +38,7 @@ const convertTime = (isoDate: string) => {
     minute: "2-digit",
     timeZone: "Asia/Makassar",
   });
-  return `${date} WITA`;
+  return `${date}`;
 };
 
 const convertDate = (isoDate: string) => {

@@ -1,5 +1,6 @@
 import { Tab, Tabs } from "@heroui/react";
 import Profile from "./Profile";
+import Printer from "./Printer";
 
 const Pengaturan = () => {
   
@@ -10,7 +11,7 @@ const Pengaturan = () => {
             <Profile />
           </Tab>
           <Tab key="printer" title="Printer">
-            
+            <Printer />
           </Tab>
         </Tabs>
       </section>

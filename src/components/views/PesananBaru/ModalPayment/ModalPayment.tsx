@@ -4,6 +4,9 @@ import { Button, Chip, Input, Modal, ModalBody, ModalContent, ModalHeader, Tab, 
 import { useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { PAYMENT_NON_CASH } from "./ModalPayment.constant";
+import { useSerial } from "@/context/SerialContext";
+import { Br, Cut, Line, Printer, Row, render, Text, Image } from 'react-thermal-printer';
+import { convertTime } from "@/utils/date";
 
 interface PropTypes {
     isOpen: boolean;
@@ -17,14 +20,19 @@ interface PropTypes {
 const roundToNearestThousand = (num: number) => Math.ceil(num / 10000) * 10000;
 
 const ModalPayment = (props: PropTypes) => {
-    const { isOpen, onClose, onOpenChange, cart, subtotal, pelanggan ="pelanggan umum" } = props;
+    const { isOpen, onClose, onOpenChange, cart, subtotal, pelanggan } = props;
+    const { write } = useSerial();
+    
     const [selected, setSelected] = useState<"exact" | "rounded" | "custom">("exact");
-    const [selectedPayment, setSelectedPayment] = useState("");
-    const [selectedMethod, setSelectedMethod] =useState<"takeaway" | "delivery">("takeaway");
+    const [selectedPayment, setSelectedPayment] = useState("tunai");
+    const [selectedPaymentNonTunai, setSelectedPaymentNonTunai] = useState("");
+    const [selectedMethod, setSelectedMethod] =useState<"Takeaway" | "Delivery">("Takeaway");
     const [customAmount, setCustomAmount] = useState<number | "">("");
+    const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
 
     const exactAmount = subtotal;
     const roundedAmount = roundToNearestThousand(subtotal);
+    const amonut = selected === "exact" ? exactAmount : selected === "rounded" ? roundedAmount : customAmount
 
     const checkbox = tv({
         slots: {
@@ -89,6 +97,107 @@ const ModalPayment = (props: PropTypes) => {
         return true;
     }
 
+    const handleSelectionChange = (key: React.Key) => {
+        setSelectedPayment(String(key));
+    };
+
+    const now = new Date();
+
+    const summary = cart.reduce(
+        (acc, item) => {
+            const subtotal = item.price * item.quantity;
+            let discount = 0;
+            if (item.isDiscount > 0) {
+            if (item.isPercent) {
+                discount = (subtotal * item.isDiscount) / 100;
+            } else {
+                discount = item.isDiscount
+            }
+            }
+
+            acc.totalQuantity += item.quantity;
+            acc.totalDiscount += discount;
+            acc.totalPrice += subtotal - discount;
+
+            return acc;
+        },
+        { totalQuantity: 0, totalDiscount: 0, totalPrice: 0 }
+    );
+    
+    const receipt = (
+        <Printer type="epson" width={31} debug={true}>
+            <Image
+                align="center"
+                src="./images/general/logojajan.jpg"
+            />
+            {/* <Image
+                align="center"
+                src="./images/general/logogerai.jpg"
+            /> */}
+            <Text align="center" bold={true}>Roti Gembung Panglima - Juanda 2</Text>
+            <Text align="center">RGP-J2.25.10.14.01107</Text>
+            <Br />
+            <Line />
+            <Row left={`Pelanggan  : ${(pelanggan ?? "-")}`} right="" />
+            <Row left={`Transaksi  : ${convertTime(`${now}`)}`} right="" />
+            <Row left={`Karyawan   : Kasir`} right="" />
+
+            <Line />
+            <Text align='center'>{selectedMethod}</Text>
+            <Line />
+            
+            {cart.map(produk => (
+                <>
+                    <Text bold={true}>{produk.title}</Text>
+                    <Row left={` ${produk.quantity} x ${convertIDR(produk.price)}`} right={convertIDR(produk.price * produk.quantity)} />
+                </>
+            ))}
+
+            <Line />
+            <Row left="Jumlah Item      :" right={`${totalQuantity}`} />
+            <Line />
+
+            <Row left="Subtotal         :" right={`${convertIDR(subtotal + summary.totalDiscount)}`} />
+            {summary.totalDiscount !== 0 && (
+                <Row left="Diskon Transaksi :" right={`-${convertIDR(summary.totalDiscount)}`} />
+            )}
+
+            <Line />
+            <Row left="" right={<Text bold={true}>Total : {convertIDR(subtotal)}</Text>} />
+            <Line />
+            {selectedPayment === "tunai" ? (
+                <>    
+                    <Row left="Tunai   :" right={`${convertIDR(Number(amonut))}`} />
+                    <Row left="Kembali :" right={convertIDR(Number(amonut) - subtotal)} />
+                </>
+            ) : (
+                <Row left={`${selectedPaymentNonTunai}   :`} right={`${convertIDR(subtotal)}`} />
+            )}
+
+            <Line />
+            <Text align="center">Terima Kasih Telah Berbelanja di</Text>
+            <Text align="center">Outlet kami ya Kak :)</Text>
+            <Line />
+
+            <Text>Whatsapp  : 082220002237</Text>
+            <Text>Instagram : @Jajanpanglima</Text>
+            <Text>Facebook  : @Jajan Panglima</Text>
+            <Text>Website   : www.rotigembungpanglima.com</Text>
+            <Br />
+            <Cut lineFeeds={-6}/>
+        </Printer>
+    );
+
+    const handlePrint = async () => {
+        try {
+            const data = await render(receipt); 
+            await write(data);
+            console.log("Printed");
+        } catch (err) {
+            console.error("Print failed", err);
+        }
+    };
+
     return (
         <Modal
             onOpenChange={onOpenChange}
@@ -105,18 +214,18 @@ const ModalPayment = (props: PropTypes) => {
         >
             <ModalContent className="m-4">
                 <ModalHeader className="border-b border-secondary/20">
-                        <div className="flex items-center gap-5">
-                            <Button
-                                onPress={onClose}
-                                isIconOnly
-                                className="bg-transparent"
-                            >
-                                <FiArrowLeft size={30} />
-                            </Button>
-                            <h1 className="text-xl">
-                                Penerimaan
-                            </h1>
-                        </div>
+                    <div className="flex items-center gap-5">
+                        <Button
+                            onPress={onClose}
+                            isIconOnly
+                            className="bg-transparent"
+                        >
+                            <FiArrowLeft size={30} />
+                        </Button>
+                        <h1 className="text-xl">
+                            Penerimaan
+                        </h1>
+                    </div>
                 </ModalHeader>
                 <ModalBody className="p-0">
                     <div className="flex h-[calc(100vh-85px)]">
@@ -201,8 +310,14 @@ const ModalPayment = (props: PropTypes) => {
                                 <h1 className="text-4xl font-bold text-primary tracking-wide">{convertIDR(Number(subtotal))}</h1>
                             </div>
                             <div className="p-5 flex flex-col justify-center items-center">
-                                <Tabs aria-label="Options" size="lg" className="w-full">
-                                    <Tab key="tunai" title="Tunai" className="w-full">
+                                <Tabs 
+                                    aria-label="Options" 
+                                    size="lg" 
+                                    className="w-full"
+                                    selectedKey={selectedPayment} 
+                                    onSelectionChange={handleSelectionChange}
+                                >
+                                    <Tab key="tunai" title="Tunai" className="w-full" >
                                         <div className="flex flex-col justify-between h-[calc(100vh-280px)]">
                                             <div>
                                                 <p className="font-semibold text-xl">Nominal Penerimaan</p>
@@ -231,13 +346,13 @@ const ModalPayment = (props: PropTypes) => {
                                                         <div className="flex flex-wrap gap-3 tracking-wide">
                                                             <CustomCheckbox
                                                                 label="Takeaway"
-                                                                isSelected={selectedMethod === "takeaway"}
-                                                                onSelect={() => setSelectedMethod("takeaway")}
+                                                                isSelected={selectedMethod === "Takeaway"}
+                                                                onSelect={() => setSelectedMethod("Takeaway")}
                                                             />
                                                             <CustomCheckbox
                                                                 label="Delivery"
-                                                                isSelected={selectedMethod === "delivery"}
-                                                                onSelect={() => setSelectedMethod("delivery")}
+                                                                isSelected={selectedMethod === "Delivery"}
+                                                                onSelect={() => setSelectedMethod("Delivery")}
                                                             />
                                                         </div>
                                                     </div>
@@ -262,7 +377,11 @@ const ModalPayment = (props: PropTypes) => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <Button className="w-full font-semibold bg-primary" size="lg">
+                                            <Button 
+                                                className="w-full font-semibold bg-primary" 
+                                                size="lg"
+                                                onPress={handlePrint}
+                                            >
                                                 Bayar
                                             </Button>
                                         </div>
@@ -276,8 +395,8 @@ const ModalPayment = (props: PropTypes) => {
                                                         <CustomCheckbox
                                                             key={item.key}
                                                             label={item.label}
-                                                            isSelected={selectedPayment === item.key}
-                                                            onSelect={() => setSelectedPayment(item.key)}
+                                                            isSelected={selectedPaymentNonTunai === item.label}
+                                                            onSelect={() => setSelectedPaymentNonTunai(item.label)}
                                                         />
                                                     ))}
                                                     
@@ -287,18 +406,22 @@ const ModalPayment = (props: PropTypes) => {
                                                     <div className="flex flex-wrap gap-3 tracking-wide">
                                                         <CustomCheckbox
                                                             label="Takeaway"
-                                                            isSelected={selectedMethod === "takeaway"}
-                                                            onSelect={() => setSelectedMethod("takeaway")}
+                                                            isSelected={selectedMethod === "Takeaway"}
+                                                            onSelect={() => setSelectedMethod("Takeaway")}
                                                         />
                                                         <CustomCheckbox
                                                             label="Delivery"
-                                                            isSelected={selectedMethod === "delivery"}
-                                                            onSelect={() => setSelectedMethod("delivery")}
+                                                            isSelected={selectedMethod === "Delivery"}
+                                                            onSelect={() => setSelectedMethod("Delivery")}
                                                         />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <Button className="w-full font-semibold bg-primary" size="lg" >
+                                            <Button 
+                                                className="w-full font-semibold bg-primary" 
+                                                size="lg"
+                                                onPress={handlePrint}
+                                            >
                                                 Bayar
                                             </Button>
                                         </div>

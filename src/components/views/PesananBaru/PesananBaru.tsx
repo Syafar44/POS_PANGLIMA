@@ -171,7 +171,7 @@ const PesananBaru = () => {
                             isIconOnly 
                             radius="full" 
                             className="bg-transparent" 
-                            onPress={() => {deleteProduct(item.code_produk)}}
+                            onPress={() => {deleteProduct(item.cartItemId)}}
                           >
                               <FiTrash size={24} className="text-danger"/>
                           </Button>
@@ -185,7 +185,7 @@ const PesananBaru = () => {
                               radius="full" 
                               className="border bg-transparent border-secondary"
                               onPress={() => {
-                                item.quantity === 1 ? deleteProduct(item.code_produk) : decreaseQuantity(item.code_produk)
+                                item.quantity === 1 ? deleteProduct(item.cartItemId) : decreaseQuantity(item.cartItemId)
                               }}
                           >
                               <FiMinus />
@@ -197,7 +197,7 @@ const PesananBaru = () => {
                               isIconOnly 
                               radius="full" 
                               className="bg-primary"
-                              onPress={() => {increaseQuantity(item.code_produk)}}
+                              onPress={() => {increaseQuantity(item.cartItemId)}}
                           >
                               <FiPlus />
                           </Button>
