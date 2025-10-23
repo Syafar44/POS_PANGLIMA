@@ -1,4 +1,5 @@
 import { useSerial } from '@/context/SerialContext';
+import { Button } from '@heroui/react';
 import { Br, Cut, Line, Printer, Row, render, Text } from 'react-thermal-printer';
 
 const Profile = () => {
@@ -10,56 +11,14 @@ const Profile = () => {
                 align="center"
                 src="./images/general/logojajan7.jpg"
             /> */}
-            <Text align="center" bold={true} size={{ width: 1, height: 1 }}>Roti Gembung Panglima - Juanda 2</Text>
-            <Text align="center">RGP-J2.25.10.14.01107</Text>
+            <Text align="center" bold={true}>Roti Gembung Panglima</Text>
+            <Text align="center" bold={true}>Gerai Panglima</Text>
             <Br />
+            <Text align="center">Testing</Text>
             <Line />
-            <Row left="Pelanggan  : -" right="" />
-            <Row left="Transaksi  : 14 Okt 2025, 12:35" right="" />
-            <Row left="Karyawan   : Kasir" right="" />
-
+            <Text align="center" bold={true}>Success</Text>
             <Line />
-            <Text align='center'>Takeaway</Text>
-            <Line />
-
-            <Text bold={true}>Donat Tiramisu Almond</Text>
-            <Row left=" 2 x Rp6.000" right="Rp12.000" />
-            <Text bold={true}>Donat Oreo</Text>
-            <Row left=" 1 x Rp6.000" right="Rp6.000" />
-            <Text bold={true}>Donat Cappucino Chocochip </Text>
-            <Row left=" 1 x Rp6.000" right="Rp6.000" />
-            <Text bold={true}>Donat Meses Coklat</Text>
-            <Row left=" 1 x Rp6.000" right="Rp6.000" />
-            <Text bold={true}>Donat Coklat Kacang</Text>
-            <Row left=" 1 x Rp6.000" right="Rp6.000" />
-            <Text bold={true}>Kotak Donat</Text>
-            <Row left=" 1 Lembar x Rp0" right="Rp0" />
-            <Text bold={true}>Kotak Gembung Isi 1</Text>
-            <Row left=" 1 Lembar x Rp0" right="Rp0" />
-
-            <Line />
-            <Row left="Jumlah Item      :" right="8" />
-            <Line />
-
-            <Row left="Subtotal         :" right="Rp48.000" />
-            <Row left="Diskon Transaksi :" right="-Rp6.000" />
-
-            <Line />
-            <Row left="" right={<Text size={{ width: 1, height: 1 }} bold={true}>Total : Rp42.000</Text>} />
-            <Line />
-
-            <Row left="Tunai   :" right="Rp50.000" />
-            <Row left="Kembali :" right="Rp8.000" />
-
-            <Line />
-            <Text align="center">Terima Kasih Telah Berbelanja di</Text>
-            <Text align="center">Outlet kami ya Kak :)</Text>
-            <Line />
-
-            <Text>Whatsapp  : 082220002237</Text>
-            <Text>Instagram : @Jajanpanglima</Text>
-            <Text>Facebook  : @Jajan Panglima</Text>
-            <Text>Website   : www.rotigembungpanglima.com</Text>
+            <Text align='center'>Connected</Text>
             <Br />
             <Cut lineFeeds={-6}/>
         </Printer>
@@ -128,9 +87,9 @@ const Profile = () => {
                 {receipt}
             </div> */}
             <div className='mt-5'>
-                <button className='bg-primary w-full h-20' onClick={handlePrint}>
-                    Print
-                </button>
+                <Button className='bg-primary w-full h-' onPress={handlePrint}>
+                    Print Test
+                </Button>
             </div>
         </section>
     )

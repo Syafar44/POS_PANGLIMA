@@ -1,12 +1,10 @@
 import { cn } from "@/utils/cn"
 import { Button } from "@heroui/react"
-import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import { FiMoon, FiSun } from "react-icons/fi"
 
 const Profile = () => {
     const [mounted, setMounted] = useState(false)
-    const { theme, setTheme } = useTheme()
 
     useEffect(() => {
         setMounted(true)
@@ -25,14 +23,6 @@ const Profile = () => {
                     <h1 className="text-4xl font-semibold">Wildan</h1>
                     <p className="text-xl text-gray-500">Leader</p>
                 </span>
-            </div>
-            <div className="flex justify-between items-center border-b border-secondary/20 pb-5 px-5">
-                <span>
-                    <p className="text-xl text-gray-500">Tema</p>
-                </span>
-                <Button isIconOnly size="lg" className={cn('text-white', theme === 'light' ? 'text-white bg-primary-black' : 'text-black bg-white')} onPress={() => theme === 'light' ? setTheme('dark') : setTheme('light')}>
-                    {theme === 'light' ? <FiMoon size={30} /> : <FiSun size={30}/>}
-                </Button>
             </div>
         </section>
     )
