@@ -1,6 +1,6 @@
 import Login from "@/components/views/Auth/Login"
 
-const HomePage = () => {
+const LoginPage = () => {
     return (
         <>
             <Login />
@@ -8,4 +8,4 @@ const HomePage = () => {
     )
 }
 
-export default HomePage
+export default LoginPage

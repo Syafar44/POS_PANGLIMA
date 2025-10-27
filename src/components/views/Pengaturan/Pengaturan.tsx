@@ -5,7 +5,7 @@ import Printer from "./Printer";
 const Pengaturan = () => {
   
   return (
-      <section>
+      <section className="bg-primary/70">
         <Tabs aria-label="Options" size="lg" className="p-5">
           <Tab key="profile-pengguna" title="Profile Pengguna">
             <Profile />

@@ -54,42 +54,44 @@ const Profile = () => {
 
     return (
         <section className="p-5 flex flex-col gap-5 h-[calc(100vh-188px)] overflow-y-scroll">
-            <div className="flex flex-col gap-3">
-                <h2 className="text-lg font-bold">Pengaturan Printer</h2>
+            <div className='bg-white rounded-2xl p-5 flex flex-col gap-5'>
+                <div className="flex flex-col gap-3">
+                    <h2 className="text-lg font-bold">Pengaturan Printer</h2>
 
-                <div className="flex items-center gap-2">
-                <span
-                    className={`w-3 h-3 rounded-full ${
-                    isConnected ? "bg-green-500" : "bg-red-500"
-                    }`}
-                ></span>
-                <span>{isConnected ? "Terhubung" : "Tidak Terhubung"}</span>
+                    <div className="flex items-center gap-2">
+                    <span
+                        className={`w-3 h-3 rounded-full ${
+                        isConnected ? "bg-green-500" : "bg-red-500"
+                        }`}
+                    ></span>
+                    <span>{isConnected ? "Terhubung" : "Tidak Terhubung"}</span>
+                    </div>
+
+                    {!isConnected ? (
+                    <button
+                        onClick={handleConnect}
+                        className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+                    >
+                        Hubungkan Printer
+                    </button>
+                    ) : (
+                    <button
+                        onClick={handleDisconnect}
+                        className="bg-red-500 text-white py-2 rounded hover:bg-red-600"
+                    >
+                        Putuskan Koneksi
+                    </button>
+                    )}
                 </div>
 
-                {!isConnected ? (
-                <button
-                    onClick={handleConnect}
-                    className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-                >
-                    Hubungkan Printer
-                </button>
-                ) : (
-                <button
-                    onClick={handleDisconnect}
-                    className="bg-red-500 text-white py-2 rounded hover:bg-red-600"
-                >
-                    Putuskan Koneksi
-                </button>
-                )}
-            </div>
-
-            {/* <div>
-                {receipt}
-            </div> */}
-            <div className='mt-5'>
-                <Button className='bg-primary w-full h-' onPress={handlePrint}>
-                    Print Test
-                </Button>
+                {/* <div>
+                    {receipt}
+                </div> */}
+                <div className='mt-5'>
+                    <Button className='bg-primary w-full h-' onPress={handlePrint}>
+                        Print Test
+                    </Button>
+                </div>
             </div>
         </section>
     )

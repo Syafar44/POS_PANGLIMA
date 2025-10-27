@@ -121,7 +121,7 @@ const ModalAddProduk = (props: PropTypes) => {
                         <div className="border-b border-secondary/30 pt-3 pb-6">
                             <div className="flex justify-between mb-3">
                                 <p className="">
-                                    Pilih Varian ( {totalProps} / {maxProduk || 0} )
+                                    Pilih Varian ( {totalProps} / {(Number(maxProduk) * quantity) || 0} )
                                 </p>
                                 <Button 
                                     className="h-full bg-transparent text-red-500" 
@@ -135,6 +135,7 @@ const ModalAddProduk = (props: PropTypes) => {
                             <div className="flex flex-wrap gap-2">
                                 {produk.props.map((prop: IProduk) => {
                                     const selected = selectedProps.find((p) => p.code_produk === prop.code_produk);
+                                    const max = Number(maxProduk) * quantity
                                     return (
                                         <Button
                                             key={prop.code_produk}
@@ -143,11 +144,11 @@ const ModalAddProduk = (props: PropTypes) => {
                                             className={`border ${
                                                 selected ? "bg-primary text-white" : "bg-transparent border-primary"
                                             }`}
-                                            onPress={() => toggleProp(prop, maxProduk)}
+                                            onPress={() => toggleProp(prop, max)}
                                             isDisabled={
                                                 Boolean(!selected &&
-                                                maxProduk &&
-                                                totalProps >= maxProduk)
+                                                max &&
+                                                totalProps >= max)
                                             }
                                         >
                                             {prop.title}

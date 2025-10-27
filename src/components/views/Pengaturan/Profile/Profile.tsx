@@ -14,7 +14,7 @@ const Profile = () => {
 
     return (
         <section className="p-5 flex flex-col gap-5 h-[calc(100vh-188px)] overflow-y-scroll">
-            <div className="flex items-center gap-5 border-b border-secondary/20 p-5">
+            <div className="flex items-center gap-5 border-b border-secondary/20 p-5 bg-white rounded-2xl">
                 <div className="bg-linear-to-br from-primary/20 to-primary h-32 w-32 flex justify-center items-center font-bold text-6xl rounded-xl">
                     W
                 </div>

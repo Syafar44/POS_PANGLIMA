@@ -36,8 +36,6 @@ const PesananBaru = () => {
     setSearchTerm,
   } = usePesananBaru();
 
-  console.log("cart", cart)
-
   return (
       <section className="flex">
           <div className="w-full justify-between">
@@ -83,7 +81,7 @@ const PesananBaru = () => {
                       setSelectedID(item.code_produk)
                     }}
                     radius="sm">
-                    <CardBody className="bg-gradient-to-br from-primary/20 to-primary text-6xl font-bold flex justify-center items-center h-[150px]">
+                    <CardBody className="bg-gradient-to-br from-primary/20 to-primary text-6xl font-bold flex justify-center items-center h-[100px]">
                         GO
                     </CardBody>
                     <CardFooter className="flex-col h-[100px] justify-between items-start gap-2 text-start">
@@ -258,6 +256,7 @@ const PesananBaru = () => {
                         cart={cart}
                         subtotal={subtotal}
                         pelanggan={searchPhone}
+                        refetch={refetchCart}
                       />
                     </>
                   );
