@@ -29,7 +29,7 @@ const DashboardLayout = (props: PropTypes) => {
                     <Button isIconOnly onPress={onOpen} className="bg-transparent text-white">
                         <FiMenu size={30} />
                     </Button>
-                    <Drawer placement="left" isOpen={isOpen} onOpenChange={onOpenChange} className="bg-[url(https://res.cloudinary.com/doyafjjum/image/upload/v1761547652/background_qp7chj.jpg)] bg-cover bg-center">
+                    <Drawer hideCloseButton placement="left" isOpen={isOpen} onOpenChange={onOpenChange} className="bg-[url(https://res.cloudinary.com/doyafjjum/image/upload/v1761547652/background_qp7chj.jpg)] bg-cover bg-center">
                         <DrawerContent className="flex flex-col justify-between p-5 gap-3">
                             <div className="p-5 flex items-center gap-5 bg-white rounded-xl">
                                 <Image src="/images/general/logo.png" alt="logo" width={100} height={100} className="rounded"/>
@@ -40,7 +40,7 @@ const DashboardLayout = (props: PropTypes) => {
                             </div>
                             <div className="w-full border-secondary/40 bg-white rounded-xl">
                                 {CONTANTS.map((item) => (
-                                    <Link key={item.title} href={item.href} className={cn("px-5 py-6 flex gap-5 items-center", pathname === item.href ? "bg-primary/30" : "")}>
+                                    <Link key={item.title} href={item.href} className={cn("px-5 py-4.5 flex gap-5 items-center", pathname === item.href ? "bg-primary/30" : "")}>
                                         {item.icon}
                                         <p className="text-lg font-medium">
                                             {item.title}

@@ -183,7 +183,6 @@ const useModalPeymanet = (cart: IProdukInCart[], subtotal: number, pelanggan: st
             refetch()
             const data = await render(receipt); 
             await write(data);
-            console.log("Printed");
         } catch (err) {
             console.error("Print failed", err);
         }

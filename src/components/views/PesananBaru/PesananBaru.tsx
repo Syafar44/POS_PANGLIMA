@@ -85,10 +85,10 @@ const PesananBaru = () => {
                         GO
                     </CardBody>
                     <CardFooter className="flex-col h-[100px] justify-between items-start gap-2 text-start">
-                      <h3>
+                      <h3 className="font-bold text-sm">
                         {item.title}
                       </h3>
-                      <p className="text-primary text-shadow-black font-medium tracking-wider">{convertIDR(item.price)}</p>
+                      <p className="text-brown text-shadow-black font-medium tracking-wider">{convertIDR(item.price)}</p>
                     </CardFooter>
                   </Card>
                 ))}
@@ -129,11 +129,11 @@ const PesananBaru = () => {
                       }} key={index} className="p-5 border-b border-secondary/20 grid gap-5">
                         <div className="flex justify-between">
                           <span>
-                            <h4 className="text-lg">
+                            <h4 className="text-lg font-bold">
                               {item.title}
                             </h4>
                             <span className=" flex gap-3">
-                              <p className="text-primary tracking-wider font-medium">
+                              <p className="text-brown tracking-wider font-medium">
                                 {convertIDR(
                                   Number(
                                     (item.price * item.quantity) -
@@ -222,14 +222,14 @@ const PesananBaru = () => {
                   return (
                     <>
                       <div className="flex p-5 justify-between border-b border-secondary/20 bg-white">
-                        <h2 className="text-xl font-bold">Subtotal</h2>
-                        <p className="font-bold text-primary text-xl">
+                        <h2 className="text-xl">Subtotal</h2>
+                        <p className="font-bold text-brown text-xl">
                           {convertIDR(Number(subtotal))}
                         </p>
                       </div>
                       <div className="p-5 flex gap-2">
                         <Button 
-                          className="w-full bg-primary font-medium" 
+                          className="w-full bg-primary font-bold" 
                           radius="sm" 
                           size="lg"
                           isDisabled={cart.length === 0}
@@ -246,7 +246,7 @@ const PesananBaru = () => {
                           size="lg"
                           variant="bordered"
                         >
-                          <FiMenu size={24} />
+                          <FiMenu size={24} className="text-brown" />
                         </Button>
                       </div>
                       <ModalPayment

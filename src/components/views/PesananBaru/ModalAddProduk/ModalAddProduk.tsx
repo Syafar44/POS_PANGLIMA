@@ -68,13 +68,13 @@ const ModalAddProduk = (props: PropTypes) => {
                             <p className="text-sm font-normal">
                                 Subtotal
                             </p>
-                            <h1 className="text-xl text-primary">
+                            <h1 className="text-xl text-brown">
                                 {convertIDR(Number(produk?.price) * quantity)}
                             </h1>
                         </div>
                     </div>
                     <Button 
-                        className="ml-5 bg-primary text-white font-bold" 
+                        className="ml-5 bg-primary text-brown font-bold" 
                         size="lg" 
                         radius="sm"
                         onPress={() => handleAddCart(produk as IProduk, onClose, refetchCart)}
