@@ -1,6 +1,6 @@
 import { useSerial } from '@/context/SerialContext';
 import { Button } from '@heroui/react';
-import { Br, Cut, Line, Printer, Row, render, Text } from 'react-thermal-printer';
+import { Br, Cut, Line, Printer, render, Text } from 'react-thermal-printer';
 
 const Profile = () => {
     const { isConnected, connect, disconnect, write } = useSerial();
@@ -26,10 +26,9 @@ const Profile = () => {
 
     const handleConnect = async () => {
         try {
-        await connect();
-        console.log("Connected from Profile");
+            await connect();
         } catch (err) {
-        console.error("Connect failed in UI", err);
+            console.error("Connect failed in UI", err);
         }
     };
 
@@ -46,7 +45,6 @@ const Profile = () => {
         try {
             const data = await render(receipt); // returns Uint8Array
             await write(data);
-            console.log("Printed");
         } catch (err) {
             console.error("Print failed", err);
         }
@@ -59,29 +57,35 @@ const Profile = () => {
                     <h2 className="text-lg font-bold">Pengaturan Printer</h2>
 
                     <div className="flex items-center gap-2">
-                    <span
-                        className={`w-3 h-3 rounded-full ${
-                        isConnected ? "bg-green-500" : "bg-red-500"
-                        }`}
-                    ></span>
-                    <span>{isConnected ? "Terhubung" : "Tidak Terhubung"}</span>
+                        <span
+                            className={`w-3 h-3 rounded-full ${
+                            isConnected ? "bg-green-500" : "bg-red-500"
+                            }`}
+                        ></span>
+                        <span>{isConnected ? "Terhubung" : "Tidak Terhubung"}</span>
                     </div>
-
-                    {!isConnected ? (
-                    <button
-                        onClick={handleConnect}
-                        className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-                    >
-                        Hubungkan Printer
-                    </button>
-                    ) : (
-                    <button
-                        onClick={handleDisconnect}
-                        className="bg-red-500 text-white py-2 rounded hover:bg-red-600"
-                    >
-                        Putuskan Koneksi
-                    </button>
-                    )}
+                    <div className='w-full flex gap-10'>
+                        {/* <Button className='bg-green-600 text-white w-full text-2xl rounded-2xl h-20'
+                            onPress={handleScanBluetooth}
+                        >
+                            Scan
+                        </Button> */}
+                        {!isConnected ? (
+                            <Button
+                                onPress={handleConnect}
+                                className="bg-blue-500 text-white py-2 text-2xl rounded-2xl h-20 hover:bg-blue-600 w-full"
+                            >
+                                Hubungkan Printer
+                            </Button>
+                            ) : (
+                            <Button
+                                onPress={handleDisconnect}
+                                className="bg-red-500 text-white py-2 text-2xl rounded-2xl h-20 hover:bg-red-600 w-full"
+                            >
+                                Putuskan Koneksi
+                            </Button>
+                        )}
+                    </div>
                 </div>
 
                 {/* <div>
